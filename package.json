@@ -13,8 +13,8 @@
     "type": "git",
     "url": "git+https://github.com/ryan-harris/pwa-budget-tracker.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Ryan Harris <harris.ucla@gmail.com> (https://github.com/ryan-harris)",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ryan-harris/pwa-budget-tracker/issues"
   },
