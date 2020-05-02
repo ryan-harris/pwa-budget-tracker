@@ -2,10 +2,9 @@
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/service-worker.js")
-      .then((reg) => {
-        console.log("Service worker registered.", reg);
-      });
+    navigator.serviceWorker.register("/service-worker.js").then((reg) => {
+      console.log("Service worker registered.", reg);
+    });
   });
 }
 
@@ -16,11 +15,11 @@ const transactionApi = createTransactionApi();
 
 initTransactions();
 
-document.querySelector("#add-btn").onclick = function() {
+document.querySelector("#add-btn").onclick = function () {
   sendTransaction(true);
 };
 
-document.querySelector("#sub-btn").onclick = function() {
+document.querySelector("#sub-btn").onclick = function () {
   sendTransaction(false);
 };
 
@@ -31,7 +30,6 @@ function createTransactionForm() {
 
   const showError = (message) => {
     errorEl.textContent = message;
-    
   };
 
   // return false if invalid and display validation message
@@ -73,23 +71,21 @@ function createTransactionApi() {
         Accept: "application/json, text/plain, */*",
         "Content-Type": "application/json"
       }
-    })
-      .then(response => {    
-        return response.json();
-      });
+    }).then((response) => {
+      return response.json();
+    });
   };
 
   const fetchAll = () => {
-    return fetch("/api/transaction")
-      .then(response => {
-        return response.json();
-      });
+    return fetch("/api/transaction").then((response) => {
+      return response.json();
+    });
   };
   return Object.freeze({ create, fetchAll });
 }
 
 function initTransactions() {
-  transactionApi.fetchAll().then(data => {
+  transactionApi.fetchAll().then((data) => {
     // save db data on global variable
     transactions = data;
 
@@ -101,7 +97,7 @@ function sendTransaction(isAdding) {
   if (!transactionForm.validate()) {
     return;
   }
-  
+
   // create record
   const transaction = transactionForm.transaction();
 
@@ -117,19 +113,19 @@ function sendTransaction(isAdding) {
   populateChart();
   populateTable();
   populateTotal();
-  
+
   // also send to server
-  transactionApi.create(transaction)
-    .then(data => {
+  transactionApi
+    .create(transaction)
+    .then((data) => {
       if (data.errors) {
         transactionForm.showError("Missing Information");
-      }
-      else {
+      } else {
         transactionForm.clear();
       }
     })
     .catch(() => {
-    // fetch failed, so save in indexed db
+      // fetch failed, so save in indexed db
       saveRecord(transaction);
       transactionForm.clear();
     });
@@ -155,7 +151,7 @@ function populateTable() {
   const tbody = document.querySelector("#tbody");
   tbody.innerHTML = "";
 
-  transactions.forEach(transaction => {
+  transactions.forEach((transaction) => {
     // create and populate a table row
     const tr = document.createElement("tr");
     tr.innerHTML = `
@@ -173,13 +169,13 @@ function populateChart() {
   let sum = 0;
 
   // create date labels for chart
-  const labels = reversed.map(t => {
+  const labels = reversed.map((t) => {
     const date = new Date(t.date);
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   });
 
   // create incremental values for chart
-  const data = reversed.map(t => {
+  const data = reversed.map((t) => {
     sum += parseInt(t.value);
     return sum;
   });
@@ -195,12 +191,14 @@ function populateChart() {
     type: "line",
     data: {
       labels,
-      datasets: [{
-        label: "Total Over Time",
-        fill: true,
-        backgroundColor: "#6666ff",
-        data
-      }]
+      datasets: [
+        {
+          label: "Total Over Time",
+          fill: true,
+          backgroundColor: "#6666ff",
+          data
+        }
+      ]
     }
   });
 }
